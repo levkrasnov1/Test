@@ -1,11 +1,14 @@
 from flask import Flask, render_template, request, escape
 from vsearch import search4letters
 
+''' This aplication for search vowels, or letters in the phrase, or word, which we input '''
+
 app = Flask(__name__)
 
 import psycopg2
 from psycopg2 import Error
 
+# def for keep our data in database (PostgreSql)
 def log_request(req: 'flask_request', res: str) -> None:
     
        
@@ -40,7 +43,7 @@ def log_request(req: 'flask_request', res: str) -> None:
     with open('vsearch.log', 'a') as log:
         print(req.form, req.remote_addr, req.user_agent, res, file = log, sep = '|')''' 
         
-
+# This def contains basic functional of our application
 @app.route('/search4', methods = ['POST'])
 def do_search() -> 'html':
     phrase = request.form['phrase']
@@ -53,13 +56,15 @@ def do_search() -> 'html':
                            the_phrase = phrase,
                            the_letters = letters,
                            the_results = results)
-                                                   
+
+#  def for entry page                                                   
 @app.route('/')
 @app.route('/entry')
 def entry_page() -> 'html':
     return render_template('entry.html',
                            the_title='Welcome to search4letters on the web!')
 
+# def for keep our applicate's data in document vsearch.log
 @app.route('/viewlog')
 def view_the_log() -> 'html':
     contents = []
